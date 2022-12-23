@@ -1,3 +1,8 @@
+/*
+ * Fit4J
+ * Copyright (c) 2022 Falko Schumann <falko.schumann@muspellheim.de>
+ */
+
 package de.muspellheim.fit4j;
 
 import java.lang.reflect.*;
@@ -11,20 +16,20 @@ public class TypeAdapter {
   public Class<?> type;
 
   private static TypeAdapter on(Fixture target, Class<?> type) {
-    TypeAdapter a = adapterFor(type);
+    var a = adapterFor(type);
     a.init(target, type);
     return a;
   }
 
   public static TypeAdapter on(Fixture fixture, Field field) {
-    TypeAdapter a = on(fixture, field.getType());
+    var a = on(fixture, field.getType());
     a.target = fixture;
     a.field = field;
     return a;
   }
 
   public static TypeAdapter on(Fixture fixture, Method method) {
-    TypeAdapter a = on(fixture, method.getReturnType());
+    var a = on(fixture, method.getReturnType());
     a.target = fixture;
     a.method = method;
     return a;
@@ -73,6 +78,7 @@ public class TypeAdapter {
     if (a == null) {
       return b == null;
     }
+
     return a.equals(b);
   }
 
@@ -80,6 +86,7 @@ public class TypeAdapter {
     if (o == null) {
       return "null";
     }
+
     return o.toString();
   }
 
@@ -174,8 +181,8 @@ public class TypeAdapter {
     }
 
     public Object parse(String s) throws Exception {
-      StringTokenizer t = new StringTokenizer(s, ",");
-      Object array = Array.newInstance(componentType, t.countTokens());
+      var t = new StringTokenizer(s, ",");
+      var array = Array.newInstance(componentType, t.countTokens());
       for (int i = 0; t.hasMoreTokens(); i++) {
         Array.set(array, i, componentAdapter.parse(t.nextToken().trim()));
       }
@@ -183,9 +190,12 @@ public class TypeAdapter {
     }
 
     public String toString(Object o) {
-      if (o == null) return "";
-      int length = Array.getLength(o);
-      StringBuilder b = new StringBuilder(5 * length);
+      if (o == null) {
+        return "";
+      }
+
+      var length = Array.getLength(o);
+      var b = new StringBuilder(5 * length);
       for (int i = 0; i < length; i++) {
         b.append(componentAdapter.toString(Array.get(o, i)));
         if (i < (length - 1)) {
@@ -196,10 +206,15 @@ public class TypeAdapter {
     }
 
     public boolean equals(Object a, Object b) {
-      int length = Array.getLength(a);
-      if (length != Array.getLength(b)) return false;
+      var length = Array.getLength(a);
+      if (length != Array.getLength(b)) {
+        return false;
+      }
+
       for (int i = 0; i < length; i++) {
-        if (!componentAdapter.equals(Array.get(a, i), Array.get(b, i))) return false;
+        if (!componentAdapter.equals(Array.get(a, i), Array.get(b, i))) {
+          return false;
+        }
       }
       return true;
     }

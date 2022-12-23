@@ -1,36 +1,48 @@
 plugins {
-    id 'jacoco'
-    id 'java'
-    id 'com.diffplug.spotless' version '6.11.0'
+  id 'jacoco'
+  id 'java'
+  id 'com.diffplug.spotless' version '6.11.0'
 }
 
 group 'de.muspellheim'
 version '0.1.0'
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+compileJava {
+  options.release = 17
+  options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+  options.release = 17
+  options.encoding = 'UTF-8'
 }
 
 test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-        exceptionFormat = 'full'
-    }
-    finalizedBy jacocoTestReport
+  useJUnitPlatform()
+  testLogging {
+    events 'passed', 'skipped', 'failed'
+    showExceptions = true
+    exceptionFormat = 'full'
+  }
+  finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
-    dependsOn test
+  dependsOn test
 }
 
 spotless {
-    java {
-        googleJavaFormat()
-    }
+  java {
+    googleJavaFormat()
+    licenseHeaderFile 'config/LicenseHeader.txt'
+  }
 }

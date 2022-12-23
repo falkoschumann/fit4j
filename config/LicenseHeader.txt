@@ -1,0 +1,5 @@
+/*
+ * Fit4J
+ * Copyright (c) $YEAR Falko Schumann <falko.schumann@muspellheim.de>
+ */
+

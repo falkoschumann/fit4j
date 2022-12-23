@@ -1,3 +1,8 @@
+/*
+ * Fit4J
+ * Copyright (c) 2022 Falko Schumann <falko.schumann@muspellheim.de>
+ */
+
 package de.muspellheim.fit4j;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,8 +14,8 @@ import org.junit.jupiter.api.*;
 class FrameworkTests {
   @Test
   void testTypeAdapter() throws Exception {
-    TestFixture fixture = new TestFixture();
-    TypeAdapter adapter = TypeAdapter.on(fixture, fixture.getClass().getField("sampleInt"));
+    var fixture = new TestFixture();
+    var adapter = TypeAdapter.on(fixture, fixture.getClass().getField("sampleInt"));
     adapter.set(adapter.parse("123456"));
     assertEquals(123456, fixture.sampleInt);
     assertEquals("-234567", adapter.parse("-234567").toString());
@@ -37,7 +42,7 @@ class FrameworkTests {
     assertEquals("1, 2, 3", adapter.toString(fixture.sampleArray));
     assertTrue(adapter.equals(new int[] {1, 2, 3}, fixture.sampleArray));
     adapter = TypeAdapter.on(fixture, fixture.getClass().getField("sampleDate"));
-    Date date = new GregorianCalendar(1949, 4, 26).getTime();
+    var date = new GregorianCalendar(1949, 4, 26).getTime();
     adapter.set(adapter.parse(DateFormat.getDateInstance().format(date)));
     assertEquals(date, fixture.sampleDate);
     adapter = TypeAdapter.on(fixture, fixture.getClass().getField("sampleByte"));
@@ -54,14 +59,13 @@ class FrameworkTests {
     public int sampleInt;
     public Integer sampleInteger;
     public float sampleFloat;
-
-    public double pi() {
-      return 3.14159862;
-    }
-
     public char ch;
     public String name;
     public int[] sampleArray;
     public Date sampleDate;
+
+    public double pi() {
+      return 3.14159862;
+    }
   }
 }
