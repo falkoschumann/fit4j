@@ -22,9 +22,9 @@ class FrameworkTests {
     adapter = TypeAdapter.on(fixture, fixture.getClass().getField("sampleInteger"));
     adapter.set(adapter.parse("54321"));
     assertEquals("54321", fixture.sampleInteger.toString());
-    adapter = TypeAdapter.on(fixture, fixture.getClass().getMethod("pi", new Class[] {}));
-    assertEquals(3.14159, ((Double) adapter.invoke()).doubleValue(), 0.00001);
-    assertEquals(Double.valueOf(3.14159862), adapter.invoke());
+    adapter = TypeAdapter.on(fixture, fixture.getClass().getMethod("pi"));
+    assertEquals(3.14159, (Double) adapter.invoke(), 0.00001);
+    assertEquals(3.14159862, adapter.invoke());
     adapter = TypeAdapter.on(fixture, fixture.getClass().getField("ch"));
     adapter.set(adapter.parse("abc"));
     assertEquals('a', fixture.ch);
@@ -42,7 +42,7 @@ class FrameworkTests {
     assertEquals("1, 2, 3", adapter.toString(fixture.sampleArray));
     assertTrue(adapter.equals(new int[] {1, 2, 3}, fixture.sampleArray));
     adapter = TypeAdapter.on(fixture, fixture.getClass().getField("sampleDate"));
-    var date = new GregorianCalendar(1949, 4, 26).getTime();
+    var date = new GregorianCalendar(1949, Calendar.MAY, 26).getTime();
     adapter.set(adapter.parse(DateFormat.getDateInstance().format(date)));
     assertEquals(date, fixture.sampleDate);
     adapter = TypeAdapter.on(fixture, fixture.getClass().getField("sampleByte"));
@@ -53,7 +53,26 @@ class FrameworkTests {
     assertEquals(12345, fixture.sampleShort);
   }
 
-  class TestFixture extends Fixture {
+  @Test
+  void testScientificDouble() {
+    var pi = Double.valueOf(3.141592865);
+    assertEquals(ScientificDouble.valueOf("3.14"), pi);
+    assertEquals(ScientificDouble.valueOf("3.142"), pi);
+    assertEquals(ScientificDouble.valueOf("3.1416"), pi);
+    assertEquals(ScientificDouble.valueOf("3.14159"), pi);
+    assertEquals(ScientificDouble.valueOf("3.141592865"), pi);
+    assertNotEquals(ScientificDouble.valueOf("3.140"), pi);
+    assertNotEquals(ScientificDouble.valueOf("3.144"), pi);
+    assertNotEquals(ScientificDouble.valueOf("3.1414"), pi);
+    assertNotEquals(ScientificDouble.valueOf("3.141592863"), pi);
+    assertEquals(ScientificDouble.valueOf("6.02e23"), 6.02e23);
+    assertEquals(ScientificDouble.valueOf("6.02E23"), 6.024E23);
+    assertEquals(ScientificDouble.valueOf("6.02e23"), 6.016e23);
+    assertNotEquals(ScientificDouble.valueOf("6.02e23"), 6.026e23);
+    assertNotEquals(ScientificDouble.valueOf("6.02e23"), 6.014e23);
+  }
+
+  static class TestFixture extends Fixture {
     public byte sampleByte;
     public short sampleShort;
     public int sampleInt;
