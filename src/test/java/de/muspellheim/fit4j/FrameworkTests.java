@@ -72,6 +72,21 @@ class FrameworkTests {
     assertNotEquals(ScientificDouble.valueOf("6.02e23"), 6.014e23);
   }
 
+  @Test
+  void testEscape() {
+    var junk = "!@#$%^*()_-+={}|[]\\:\";',./?`";
+    assertEquals(junk, Fixture.escape(junk));
+    assertEquals("", Fixture.escape(""));
+    assertEquals("&lt;", Fixture.escape("<"));
+    assertEquals("&lt;&lt;", Fixture.escape("<<"));
+    assertEquals("x&lt;", Fixture.escape("x<"));
+    assertEquals("&amp;", Fixture.escape("&"));
+    assertEquals("&lt;&amp;&lt;", Fixture.escape("<&<"));
+    assertEquals("&amp;&lt;&amp;", Fixture.escape("&<&"));
+    assertEquals("a &lt; b &amp;&amp; c &lt; d", Fixture.escape("a < b && c < d"));
+    assertEquals("a<br />b", Fixture.escape("a\nb"));
+  }
+
   static class TestFixture extends Fixture {
     public byte sampleByte;
     public short sampleShort;

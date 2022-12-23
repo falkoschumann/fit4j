@@ -18,4 +18,13 @@ public class Fixture {
     }
     throw new Exception("can't yet parse " + type);
   }
+
+  public static String escape(String s) {
+    return s.replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll("  ", " &nbsp;")
+        .replaceAll("\r\n", "<br />")
+        .replaceAll("\r", "<br />")
+        .replaceAll("\n", "<br />");
+  }
 }
